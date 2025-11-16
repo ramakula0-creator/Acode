@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meme Affiliate Hub – Shop</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --bg-soft: #151515;
+      --bg-softer: #1f1f1f;
+      --text: #f5f5f5;
+      --accent: #ffb300;
+      --accent-soft: rgba(255, 179, 0, 0.15);
+      --border: #333;
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f5f5;
+      --bg-soft: #ffffff;
+      --bg-softer: #f0f0f0;
+      --text: #111111;
+      --accent: #ff6f00;
+      --accent-soft: rgba(255, 111, 0, 0.12);
+      --border: #dddddd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1c1c1c 0, var(--bg) 40%, #000 100%);
+      color: var(--text);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(90deg, rgba(0,0,0,0.92), rgba(20,20,20,0.95));
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      font-size: 1.1rem;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 0%, #fff, #ffb300 40%, #ff3d00 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #000;
+      box-shadow: 0 0 18px rgba(255, 179, 0, 0.6);
+    }
+
+    .sub {
+      font-size: 0.7rem;
+      opacity: 0.75;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .link-btn,
+    .theme-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .link-btn.primary {
+      border: none;
+      background: linear-gradient(135deg, #ffb300, #ff6f00);
+      color: #000;
+      font-weight: 600;
+      box-shadow: 0 0 18px rgba(255, 179, 0, 0.5);
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 14px 80px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .sidebar {
+      background: linear-gradient(145deg, rgba(255,179,0,0.06), rgba(255,255,255,0.02));
+      border-radius: 18px;
+      padding: 14px 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      height: fit-content;
+    }
+
+    .sidebar h3 {
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.9;
+    }
+
+    .filter-block {
+      font-size: 0.8rem;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .chip {
+      font-size: 0.78rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 9px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.1);
+    }
+
+    .chip.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .range-row {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .range-row button {
+      font-size: 0.75rem;
+      border-radius: 999px;
+      padding: 4px 9px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.12);
+      cursor: pointer;
+    }
+
+    .range-row button.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .search-box {
+      margin-top: 6px;
+    }
+
+    .search-box input {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-softer);
+      color: var(--text);
+      padding: 7px 9px;
+      font-size: 0.8rem;
+    }
+
+    .disclaimer {
+      font-size: 0.72rem;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 12px;
+    }
+
+    .product-card {
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.06), rgba(0,0,0,0.98));
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 8px 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+    }
+
+    .product-img {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .product-img img {
+      width: 100%;
+      display: block;
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      opacity: 0.85;
+    }
+
+    .badge {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .product-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.8rem;
+    }
+
+    .price-main {
+      font-weight: 600;
+    }
+
+    .price-cut {
+      text-decoration: line-through;
+      opacity: 0.6;
+      font-size: 0.75rem;
+    }
+
+    .badge-sale {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .buy-btn {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .foot-note {
+      margin-top: 4px;
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+
+    .top-bar {
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+    }
+
+    .sort-select {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      padding: 5px 9px;
+      font-size: 0.78rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 14px 10px 60px;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="brand">
+        <div class="brand-logo">M</div>
+        <div>
+          Meme Affiliate Hub – Shop
+          <div class="sub">Curated Telugu budget products</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <!-- NOTE: change href to your main feed page path -->
+        <a href="index.html" class="link-btn">⬅ Back to Memes</a>
+        <button id="themeToggle" class="theme-toggle">🌙 Dark</button>
+        <a href="#deals" class="link-btn primary">🔥 View Today Deals</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- FILTERS -->
+      <aside class="sidebar">
+        <div class="filter-block">
+          <h3>Categories</h3>
+          <div class="chip-row" id="catChips">
+            <button class="chip active" data-cat="all">All</button>
+            <button class="chip" data-cat="gadgets">Gadgets</button>
+            <button class="chip" data-cat="room">Room Decor</button>
+            <button class="chip" data-cat="students">Students</button>
+            <button class="chip" data-cat="funny">Funny Gifts</button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <h3>Price Range</h3>
+          <div class="range-row" id="priceRange">
+            <button data-max="300">₹0 – 300</button>
+            <button data-max="500" class="active">₹0 – 500</button>
+            <button data-max="1000">₹0 – 1000</button>
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <h3>Search</h3>
+          <div class="search-box">
+            <input type="text" id="searchBox" placeholder="Eg: earbuds, lamp, stand..." />
+          </div>
+        </div>
+
+        <div class="filter-block">
+          <h3>Note</h3>
+          <div class="disclaimer">
+            ఈ page లోని links లో చాలా Amazon / Flipkart affiliate links ఉంటాయి.  
+            నీకు extra cost ఎక్కడా పెరగదు, కేవలం నాకు చిన్న commission వస్తుంది. ❤️
+          </div>
+        </div>
+      </aside>
+
+      <!-- PRODUCTS -->
+      <section>
+        <div class="top-bar">
+          <div id="resultCount">All products</div>
+          <div>
+            <select id="sortSelect" class="sort-select">
+              <option value="default">Sort: Default</option>
+              <option value="low-high">Price: Low → High</option>
+              <option value="high-low">Price: High → Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <!-- Example Product Cards – replace href & img with real values -->
+
+          <!-- Gadgets -->
+          <article class="product-card" data-cat="gadgets" data-price="499" data-name="Budget Earbuds Under 500">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Earbuds" alt="Earbuds" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Amazon</span>
+              <span class="tag">Gadget</span>
+            </div>
+            <div class="product-title">Budget Earbuds under ₹500</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹499</span>
+                <span class="price-cut">₹899</span>
+              </div>
+              <span class="badge-sale">-45%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">Buy on Amazon</a>
+            <div class="foot-note">Perfect for memes + reels binge listening 😎</div>
+          </article>
+
+          <article class="product-card" data-cat="gadgets" data-price="299" data-name="Mobile Study Stand">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Mobile+Stand" alt="Mobile Stand" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Flipkart</span>
+              <span class="tag">Students</span>
+            </div>
+            <div class="product-title">Mobile Study Stand</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹299</span>
+                <span class="price-cut">₹499</span>
+              </div>
+              <span class="badge-sale">-40%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">View on Flipkart</a>
+            <div class="foot-note">Videos chusthu notes rasukune students kosam.</div>
+          </article>
+
+          <!-- Room Decor -->
+          <article class="product-card" data-cat="room" data-price="279" data-name="LED Strip Lights">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=LED+Strip+Lights" alt="LED Lights" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Amazon</span>
+              <span class="tag">Room Decor</span>
+            </div>
+            <div class="product-title">LED Strip Lights (5m)</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹279</span>
+                <span class="price-cut">₹699</span>
+              </div>
+              <span class="badge-sale">-60%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">Buy Lights</a>
+            <div class="foot-note">Reels / memes background lighting ki perfect.</div>
+          </article>
+
+          <article class="product-card" data-cat="room" data-price="199" data-name="Wall Stickers Pack">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Wall+Stickers" alt="Wall Stickers" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Flipkart</span>
+              <span class="tag">Room Decor</span>
+            </div>
+            <div class="product-title">Wall Stickers Pack</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹199</span>
+                <span class="price-cut">₹399</span>
+              </div>
+              <span class="badge-sale">-50%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">View on Flipkart</a>
+            <div class="foot-note">“Amma room chusthey” meme lo use cheyyadaniki 😄</div>
+          </article>
+
+          <!-- Students -->
+          <article class="product-card" data-cat="students" data-price="349" data-name="Mini Study Lamp">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Study+Lamp" alt="Study Lamp" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Amazon</span>
+              <span class="tag">Students</span>
+            </div>
+            <div class="product-title">Mini Study Lamp</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹349</span>
+                <span class="price-cut">₹699</span>
+              </div>
+              <span class="badge-sale">-50%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">Buy on Amazon</a>
+            <div class="foot-note">Late night exam panic lo help avvadaniki.</div>
+          </article>
+
+          <!-- Funny Gifts -->
+          <article class="product-card" data-cat="funny" data-price="249" data-name="Funny Printed Mug">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Funny+Mug" alt="Funny Mug" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Amazon</span>
+              <span class="tag">Gift</span>
+            </div>
+            <div class="product-title">Funny Printed Mug</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹249</span>
+                <span class="price-cut">₹399</span>
+              </div>
+              <span class="badge-sale">-35%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">See on Amazon</a>
+            <div class="foot-note">Meme friends కి gift ki perfect.</div>
+          </article>
+
+          <article class="product-card" data-cat="funny" data-price="199" data-name="Emoji Pillow">
+            <div class="product-img">
+              <img src="https://via.placeholder.com/400x400?text=Emoji+Pillow" alt="Emoji Pillow" />
+            </div>
+            <div class="badge-row">
+              <span class="badge">Flipkart</span>
+              <span class="tag">Fun</span>
+            </div>
+            <div class="product-title">Emoji Pillow</div>
+            <div class="price-row">
+              <div>
+                <span class="price-main">₹199</span>
+                <span class="price-cut">₹299</span>
+              </div>
+              <span class="badge-sale">-30%</span>
+            </div>
+            <a class="buy-btn" href="YOUR_AFFILIATE_LINK_HERE" target="_blank">View on Flipkart</a>
+            <div class="foot-note">Background prop ga memes lo use cheyyachu.</div>
+          </article>
+        </div>
+
+        <div id="deals" style="margin-top:16px; font-size:0.8rem; opacity:0.85;">
+          🔥 Tip: Ee page ni bookmark chesuko, regular ga best budget items update chestu untav (gadgets + room decor + students life items).
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © 2025 Meme Affiliate Hub – Shop · Prices change avvachu, final price Amazon/Flipkart site lo verify chesuko.
+    </footer>
+  </div>
+
+  <script>
+    // Theme toggle
+    const root = document.documentElement;
+    const themeToggle = document.getElementById("themeToggle");
+    let isDark = true;
+
+    themeToggle.addEventListener("click", () => {
+      isDark = !isDark;
+      if (isDark) {
+        root.removeAttribute("data-theme");
+        themeToggle.textContent = "🌙 Dark";
+      } else {
+        root.setAttribute("data-theme", "light");
+        themeToggle.textContent = "☀️ Light";
+      }
+    });
+
+    const productGrid = document.getElementById("productGrid");
+    const cards = Array.from(productGrid.querySelectorAll(".product-card"));
+    const catChips = document.querySelectorAll("#catChips .chip");
+    const priceButtons = document.querySelectorAll("#priceRange button");
+    const searchBox = document.getElementById("searchBox");
+    const resultCount = document.getElementById("resultCount");
+    const sortSelect = document.getElementById("sortSelect");
+
+    let activeCat = "all";
+    let maxPrice = 500;
+    let searchTerm = "";
+    let currentSort = "default";
+
+    function applyFilters() {
+      let visible = 0;
+      let filtered = cards.slice();
+
+      filtered.forEach(card => {
+        let show = true;
+        const cat = card.getAttribute("data-cat");
+        const price = parseFloat(card.getAttribute("data-price") || "0");
+        const name = (card.getAttribute("data-name") || "").toLowerCase();
+
+        if (activeCat !== "all" && cat !== activeCat) show = false;
+        if (price > maxPrice) show = false;
+        if (searchTerm && !name.includes(searchTerm)) show = false;
+
+        card.style.display = show ? "" : "none";
+        if (show) visible++;
+      });
+
+      resultCount.textContent = visible + " product(s) showing";
+    }
+
+    function applySort() {
+      let sorted = cards.slice();
+
+      if (currentSort === "low-high") {
+        sorted.sort((a, b) => 
+          parseFloat(a.getAttribute("data-price")) - parseFloat(b.getAttribute("data-price"))
+        );
+      } else if (currentSort === "high-low") {
+        sorted.sort((a, b) => 
+          parseFloat(b.getAttribute("data-price")) - parseFloat(a.getAttribute("data-price"))
+        );
+      }
+
+      sorted.forEach(card => productGrid.appendChild(card));
+      applyFilters();
+    }
+
+    catChips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        catChips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeCat = chip.getAttribute("data-cat");
+        applyFilters();
+      });
+    });
+
+    priceButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        priceButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        maxPrice = parseFloat(btn.getAttribute("data-max"));
+        applyFilters();
+      });
+    });
+
+    searchBox.addEventListener("input", () => {
+      searchTerm = searchBox.value.trim().toLowerCase();
+      applyFilters();
+    });
+
+    sortSelect.addEventListener("change", () => {
+      currentSort = sortSelect.value;
+      applySort();
+    });
+
+    applyFilters();
+  </script>
+</body>
+  </html>
